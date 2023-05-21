@@ -1,0 +1,9 @@
+SELECT part_number, manufacturer, MIN(price) as price, source
+FROM (SELECT res.part_number, res.manufacturer, res.price, 'result' AS source
+FROM result AS res
+WHERE res.part_number IN (SELECT part_number FROM sample_supplier)
+UNION ALL
+SELECT sup.part_number, sup.manufacturer, sup.price, 'sample_supplier' AS source
+FROM sample_supplier AS sup
+WHERE sup.part_number IN (SELECT part_number FROM result))
+GROUP BY part_number
